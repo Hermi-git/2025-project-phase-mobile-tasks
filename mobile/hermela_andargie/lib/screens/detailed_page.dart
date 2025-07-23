@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hermela_andargie/main.dart';
+import 'package:hermela_andargie/models/product.dart';
 
 class DetailedPage extends StatelessWidget {
-  const DetailedPage({super.key});
+  final Product product;
+
+  const DetailedPage({super.key, required this.product});
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3F8),
       body: SafeArea(
         child: Column(
           children: [
-            // Top Image and Back Button
+            // Image and back button
             Stack(
               children: [
                 ClipRRect(
@@ -19,7 +25,7 @@ class DetailedPage extends StatelessWidget {
                     bottomRight: Radius.circular(16),
                   ),
                   child: Image.asset(
-                    'assets/images/derby_shoes.jpg',
+                    product.image,
                     height: 240,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -43,7 +49,7 @@ class DetailedPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Product Name, Category, Rating, Price
+            // Name, category, price, rating
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -53,34 +59,39 @@ class DetailedPage extends StatelessWidget {
                   // Name & Category
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text("Men's shoe", style: TextStyle(color: Colors.grey)),
-                      SizedBox(height: 4),
+                    children: [
                       Text(
-                        "Derby Leather",
-                        style: TextStyle(
+                        product.category,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        product.name,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-
                   // Rating & Price
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: const [
+                    children: [
                       Row(
                         children: [
-                          Icon(Icons.star, color: Colors.amber, size: 16),
-                          SizedBox(width: 4),
-                          Text("(4.0)", style: TextStyle(color: Colors.grey)),
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            "(${product.rating})",
+                            style: const TextStyle(color: Colors.grey),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
-                        "\$120",
-                        style: TextStyle(
+                        "\$${product.price}",
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -93,39 +104,10 @@ class DetailedPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Size Scrollable Chips
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: const [
-                  Text("Size:", style: TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  _buildSizeChip("39"),
-                  _buildSizeChip("40"),
-                  _buildSizeChip("41", isSelected: true),
-                  _buildSizeChip("42"),
-                  _buildSizeChip("43"),
-                  _buildSizeChip("44"),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Description
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Text(
-                "A derby leather shoe is a classic and versatile footwear option characterized by its open lacing system, where the shoelace eyelets are sewn on top of the vamp (the upper part of the shoe). This design feature provides a more relaxed and casual look compared to the closed lacing system of oxford shoes. Derby shoes are typically made of high-quality leather, known for its durability and elegance, making them suitable for both formal and casual occasions. With their timeless style and comfortable fit, derby leather shoes are a staple in any well-rounded wardrobe.",
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "This is a detailed description of the product.",
                 style: TextStyle(color: Colors.black87),
                 textAlign: TextAlign.justify,
               ),
@@ -140,7 +122,9 @@ class DetailedPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context, 'delete');
+                      },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -152,7 +136,21 @@ class DetailedPage extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final result = await Navigator.pushNamed(
+                          context,
+                          addUpdateRoute,
+                          arguments: product,
+                        );
+
+                        if (result is Product) {
+                          Navigator.pop(
+                            context,
+                            result,
+                          ); // Pass updated product back
+                        }
+                      },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.white,
@@ -165,28 +163,6 @@ class DetailedPage extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  static Widget _buildSizeChip(String label, {bool isSelected = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.deepPurple : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
     );
