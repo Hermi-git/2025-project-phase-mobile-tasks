@@ -1,7 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:hermela_andargie/models/product.dart';
+import 'package:hermela_andargie/screens/add_update_page.dart';
+import 'package:hermela_andargie/screens/detailed_page.dart';
+import 'package:hermela_andargie/utils/custom_route.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Product> _products = [
+    Product(
+      name: "Derby Leather Shoes",
+      category: "Men’s shoe",
+      price: 120.0,
+      rating: 4.0,
+      image: "assets/images/derby_shoes.jpg",
+    ),
+    Product(
+      name: "Elegant Heels",
+      category: "Women’s shoe",
+      price: 140.0,
+      rating: 4.5,
+      image: "assets/images/elegant_heels.jpg",
+    ),
+    Product(
+      name: "Sport Running Shoes",
+      category: "Unisex",
+      price: 99.0,
+      rating: 4.2,
+      image: "assets/images/sport_running.jpg",
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +42,16 @@ class HomePage extends StatelessWidget {
       backgroundColor: const Color(0xFFF7F3F8),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurple,
-        onPressed: () {},
+        onPressed: () async {
+          final result = await Navigator.of(
+            context,
+          ).push(createFadeRoute(const AddUpdatePage()));
+          if (result is Product) {
+            setState(() {
+              _products.add(result);
+            });
+          }
+        },
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: SafeArea(
@@ -18,11 +60,11 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// Header Section
+              // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  /// Profile + Greeting
+                  // Profile + Greeting
                   Row(
                     children: [
                       Container(
@@ -52,8 +94,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  /// Notification Icon
+                  // Notification Icon
                   Container(
                     width: 36,
                     height: 36,
@@ -78,7 +119,7 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              /// Title + Search Button
+              // Title + Search
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -95,85 +136,103 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              /// Product List
+              // Product List
               Expanded(
                 child: ListView.builder(
-                  itemCount: products.length,
+                  itemCount: _products.length,
                   itemBuilder: (context, index) {
-                    final product = products[index];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16),
-                            ),
-                            child: Image.asset(
-                              product.image,
-                              height: 350,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                /// Name + Category
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      product.category,
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                    final product = _products[index];
+                    return GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.of(
+                          context,
+                        ).push(createFadeRoute(DetailedPage(product: product)));
 
-                                /// Price + Rating
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "\$${product.price}",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text("(${product.rating})"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        if (result == 'delete') {
+                          setState(() {
+                            _products.removeAt(index);
+                          });
+                        } else if (result is Product) {
+                          setState(() {
+                            _products[index] = result;
+                          });
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                              child: Image.asset(
+                                product.image,
+                                height: 350,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Name + Category
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        product.category,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Price + Rating
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "\$${product.price}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text("(${product.rating})"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -186,43 +245,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-class Product {
-  final String name;
-  final String category;
-  final double price;
-  final double rating;
-  final String image;
-
-  Product({
-    required this.name,
-    required this.category,
-    required this.price,
-    required this.rating,
-    required this.image,
-  });
-}
-
-final List<Product> products = [
-  Product(
-    name: "Derby Leather Shoes",
-    category: "Men’s shoe",
-    price: 120.0,
-    rating: 4.0,
-    image: "assets/images/derby_shoes.jpg",
-  ),
-  Product(
-    name: "Elegant Heels",
-    category: "Women’s shoe",
-    price: 140.0,
-    rating: 4.5,
-    image: "assets/images/elegant_heels.jpg",
-  ),
-  Product(
-    name: "Sport Running Shoes",
-    category: "Unisex",
-    price: 99.0,
-    rating: 4.2,
-    image: "assets/images/sport_running.jpg",
-  ),
-];
