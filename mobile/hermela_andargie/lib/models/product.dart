@@ -16,24 +16,24 @@ class Product {
 
 final List<Product> products = [
   Product(
-    name: "Derby Leather Shoes",
-    category: "Men’s shoe",
+    name: 'Derby Leather Shoes',
+    category: 'Men’s shoe',
     price: 120.0,
     rating: 4.0,
-    image: "assets/images/derby_shoes.jpg",
+    image: 'assets/images/derby_shoes.jpg',
   ),
   Product(
-    name: "Elegant Heels",
-    category: "Women’s shoe",
+    name: 'Elegant Heels',
+    category: 'Women’s shoe',
     price: 140.0,
     rating: 4.5,
-    image: "assets/images/elegant_heels.jpg",
+    image: 'assets/images/elegant_heels.jpg',
   ),
   Product(
-    name: "Sport Running Shoes",
-    category: "Unisex",
+    name: 'Sport Running Shoes',
+    category: 'Unisex',
     price: 99.0,
     rating: 4.2,
-    image: "assets/images/sport_running.jpg",
+    image: 'assets/images/sport_running.jpg',
   ),
 ];

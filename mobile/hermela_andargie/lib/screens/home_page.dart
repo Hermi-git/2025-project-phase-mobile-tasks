@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hermela_andargie/models/product.dart';
-import 'package:hermela_andargie/screens/add_update_page.dart';
-import 'package:hermela_andargie/screens/detailed_page.dart';
-import 'package:hermela_andargie/utils/custom_route.dart';
+import '../models/product.dart';
+import '../screens/add_update_page.dart';
+import '../screens/detailed_page.dart';
+import '../utils/custom_route.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,27 +12,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Product> _products = [
+ late final List<Product> _products = [
     Product(
-      name: "Derby Leather Shoes",
-      category: "Men’s shoe",
+      name: 'Derby Leather Shoes',
+      category: 'Men’s shoe',
       price: 120.0,
       rating: 4.0,
-      image: "assets/images/derby_shoes.jpg",
+      image: 'assets/images/derby_shoes.jpg',
     ),
     Product(
-      name: "Elegant Heels",
-      category: "Women’s shoe",
+      name: 'Elegant Heels',
+      category: 'Women’s shoe',
       price: 140.0,
       rating: 4.5,
-      image: "assets/images/elegant_heels.jpg",
+      image: 'assets/images/elegant_heels.jpg',
     ),
     Product(
-      name: "Sport Running Shoes",
-      category: "Unisex",
+      name: 'Sport Running Shoes',
+      category: 'Unisex',
       price: 99.0,
       rating: 4.2,
-      image: "assets/images/sport_running.jpg",
+      image: 'assets/images/sport_running.jpg',
     ),
   ];
 
@@ -80,11 +80,11 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            "July 20, 2025",
+                            'July 20, 2025',
                             style: TextStyle(color: Colors.grey),
                           ),
                           Text(
-                            "Hello, Yohannes",
+                            'Hello, Yohannes',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Available Products",
+                    'Available Products',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        "\$${product.price}",
+                                        '\$${product.price}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -223,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                                             size: 16,
                                           ),
                                           const SizedBox(width: 4),
-                                          Text("(${product.rating})"),
+                                          Text('(${product.rating})'),
                                         ],
                                       ),
                                     ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hermela_andargie/models/product.dart';
-import 'package:hermela_andargie/screens/add_update_page.dart';
-import 'package:hermela_andargie/screens/detailed_page.dart';
-import 'screens/home_page.dart';
+import './models/product.dart';
+import './screens/add_update_page.dart';
+import './screens/detailed_page.dart';
+import './screens/home_page.dart';
 
 //named routes
 const String homeRoute = '/';

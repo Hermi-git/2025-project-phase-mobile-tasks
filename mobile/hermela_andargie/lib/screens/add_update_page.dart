@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hermela_andargie/models/product.dart';
+import '../models/product.dart';
 
 class AddUpdatePage extends StatefulWidget {
   final Product? product; // nullable – if null, we're adding
@@ -52,7 +52,7 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3F8),
       appBar: AppBar(
-        title: Text(isEditing ? "Update Product" : "Add Product"),
+        title: Text(isEditing ? 'Update Product' : 'Add Product'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -87,29 +87,29 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
 
               /// Input Fields
               _buildTextField(
-                label: "Product Name",
+                label: 'Product Name',
                 controller: nameController,
               ),
               const SizedBox(height: 16),
               _buildTextField(
-                label: "Category",
+                label: 'Category',
                 controller: categoryController,
               ),
               const SizedBox(height: 16),
               _buildTextField(
-                label: "Price",
+                label: 'Price',
                 controller: priceController,
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
               _buildTextField(
-                label: "Rating",
+                label: 'Rating',
                 controller: ratingController,
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
               _buildTextField(
-                label: "Image Path",
+                label: 'Image Path',
                 controller: imagePathController,
               ),
               const SizedBox(height: 32),
@@ -132,7 +132,7 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  isEditing ? "UPDATE" : "ADD",
+                  isEditing ? 'UPDATE' : 'ADD',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -149,7 +149,7 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text(
-                    "DELETE",
+                    'DELETE',
                     style: TextStyle(color: Colors.red),
                   ),
                 ),

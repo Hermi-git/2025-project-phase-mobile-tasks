@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hermela_andargie/main.dart';
-import 'package:hermela_andargie/models/product.dart';
+import '../main.dart';
+import '../models/product.dart';
 
 class DetailedPage extends StatelessWidget {
   final Product product;
@@ -83,14 +83,14 @@ class DetailedPage extends StatelessWidget {
                           const Icon(Icons.star, color: Colors.amber, size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            "(${product.rating})",
+                            '(${product.rating})',
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "\$${product.price}",
+                        '\$${product.price}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -107,7 +107,7 @@ class DetailedPage extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "This is a detailed description of the product.",
+                'This is a detailed description of the product.',
                 style: TextStyle(color: Colors.black87),
                 textAlign: TextAlign.justify,
               ),
@@ -130,7 +130,7 @@ class DetailedPage extends StatelessWidget {
                         side: const BorderSide(color: Colors.red),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      child: const Text("DELETE"),
+                      child: const Text('DELETE'),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -156,7 +156,7 @@ class DetailedPage extends StatelessWidget {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      child: const Text("UPDATE"),
+                      child: const Text('UPDATE'),
                     ),
                   ),
                 ],
