@@ -28,3 +28,4 @@ class DuplicateFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+class UnimplementedFailure extends Failure {}
