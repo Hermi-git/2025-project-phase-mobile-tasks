@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    "Search Product",
+                    'Search Product',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -44,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Leather",
+                        hintText: 'Leather',
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.arrow_forward_ios),
@@ -71,16 +71,16 @@ class _SearchPageState extends State<SearchPage> {
 
               /// Product Cards
               _buildProductCard(
-                imagePath: "assets/images/derby_shoes.jpg",
-                name: "Derby Leather Shoes",
-                category: "Men’s shoe",
+                imagePath: 'assets/images/derby_shoes.jpg',
+                name: 'Derby Leather Shoes',
+                category: 'Men’s shoe',
                 price: 120,
                 rating: 4.0,
               ),
               _buildProductCard(
-                imagePath: "assets/images/derby_shoes.jpg",
-                name: "Derby Leather Shoes",
-                category: "Men’s shoe",
+                imagePath: 'assets/images/derby_shoes.jpg',
+                name: 'Derby Leather Shoes',
+                category: 'Men’s shoe',
                 price: 120,
                 rating: 4.0,
               ),
@@ -90,14 +90,14 @@ class _SearchPageState extends State<SearchPage> {
               /// Filter Form
               const TextField(
                 decoration: InputDecoration(
-                  labelText: "Category",
+                  labelText: 'Category',
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text("Price"),
+              const Text('Price'),
               Slider(
                 value: _priceValue,
                 onChanged: (value) {
@@ -120,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Center(
-                  child: Text("APPLY", style: TextStyle(color: Colors.white)),
+                  child: Text('APPLY', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],
@@ -180,7 +180,7 @@ class _SearchPageState extends State<SearchPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "\$$price",
+                      '\$$price',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
@@ -188,7 +188,7 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         const Icon(Icons.star, color: Colors.amber, size: 16),
                         const SizedBox(width: 4),
-                        Text("($rating)"),
+                        Text('($rating)'),
                       ],
                     ),
                   ],
