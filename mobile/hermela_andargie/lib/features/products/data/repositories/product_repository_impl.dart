@@ -46,7 +46,7 @@ Future<Either<Failure, List<Product>>> getAllProducts() async {
         return Left(ServerFailure());
       }
     } else {
-      return Left(CacheFailure());
+      return Left(NoConnectionFailure());
     }
   }
 
@@ -65,7 +65,7 @@ Future<Either<Failure, List<Product>>> getAllProducts() async {
         return Left(ServerFailure());
       }
     } else {
-      return Left(CacheFailure()); 
+      return Left(NoConnectionFailure()); 
     }
   }
 
@@ -83,9 +83,8 @@ Future<Either<Failure, List<Product>>> getAllProducts() async {
         return Left(ServerFailure());
       }
     } else {
-      return Left(
-        CacheFailure(),
-      );
+      return  Left(NoConnectionFailure());
+    
     }
   }
 
@@ -100,7 +99,7 @@ Future<Either<Failure, List<Product>>> getAllProducts() async {
         return Left(ServerFailure());
       }
     } else {
-      return Left(CacheFailure());
+      return Left(NoConnectionFailure());
     }
   }
 

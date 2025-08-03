@@ -177,7 +177,7 @@ void main() {
       imageUrl: 'https://example.com/image.jpg',
       price: 9.99,
     );
-    const Product tProduct = tProductModel;
+    const ProductModel tProduct = tProductModel;
 
     test('should check if the device is online', () async {
       // arrange
@@ -237,7 +237,7 @@ void main() {
       expect(result, equals(Left(ServerFailure())));
     });
 
-    test('should return CacheFailure when device is offline', () async {
+    test('should return NoConnectionFailure when device is offline', () async {
       // arrange
       const tId = '123';
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
@@ -247,7 +247,8 @@ void main() {
 
       // assert
       verifyNever(mockRemoteDataSource.getProductById(any));
-      expect(result, equals(Left(CacheFailure())));
+      expect(result, equals(Left(NoConnectionFailure())));
+
     });
 
   });
@@ -314,7 +315,7 @@ void main() {
       },
     );
 
-    test('should return CacheFailure when device is offline', () async {
+    test('should return NoConnectionFailure when device is offline', () async {
       // arrange
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
@@ -323,7 +324,8 @@ void main() {
 
       // assert
       verifyNever(mockRemoteDataSource.createProduct(product: tProduct));
-      expect(result, equals(Left(CacheFailure())));
+      expect(result, equals(Left(NoConnectionFailure())));
+
     });
   });
    
@@ -388,7 +390,7 @@ void main() {
       },
     );
 
-    test('should return CacheFailure when device is offline', () async {
+    test('should return NoConnectionFailure when device is offline', () async {
       // arrange
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
@@ -397,7 +399,8 @@ void main() {
 
       // assert
       verifyNever(mockRemoteDataSource.updateProduct(product: tProduct));
-      expect(result, equals(Left(CacheFailure())));
+      expect(result, equals(Left(NoConnectionFailure())));
+
     });
   });
 
@@ -454,7 +457,7 @@ void main() {
       },
     );
 
-    test('should return CacheFailure when device is offline', () async {
+    test('should return NoConnectionFailure when device is offline', () async {
       // arrange
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
@@ -463,7 +466,8 @@ void main() {
 
       // assert
       verifyNever(mockRemoteDataSource.deleteProduct(tId));
-      expect(result, equals(Left(CacheFailure())));
+      expect(result, equals(Left(NoConnectionFailure())));
+
     });
   });
 

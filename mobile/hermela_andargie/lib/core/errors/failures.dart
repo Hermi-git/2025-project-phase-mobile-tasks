@@ -29,3 +29,4 @@ class DuplicateFailure extends Failure {
   List<Object?> get props => [message];
 }
 class UnimplementedFailure extends Failure {}
+class NoConnectionFailure extends Failure {}
