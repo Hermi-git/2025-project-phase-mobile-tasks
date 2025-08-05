@@ -80,8 +80,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
     });
 
-
-
   }
 
   String _mapFailureToMessage(Failure failure) {
