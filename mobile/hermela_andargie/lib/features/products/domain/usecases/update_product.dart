@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../../../core/errors/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/product.dart';
@@ -15,8 +17,11 @@ class UpdateProductUseCase extends UseCase<Product, UpdateProductParams> {
   }
 }
 
-class UpdateProductParams {
+class UpdateProductParams extends Equatable {
   final Product product;
 
-  UpdateProductParams({required this.product});
+  const UpdateProductParams({required this.product});
+
+  @override
+  List<Object?> get props => [product];
 }
