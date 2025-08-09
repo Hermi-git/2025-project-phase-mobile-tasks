@@ -30,3 +30,11 @@ class DuplicateFailure extends Failure {
 }
 class UnimplementedFailure extends Failure {}
 class NoConnectionFailure extends Failure {}
+
+class InvalidCredentialsFailure extends Failure {
+  final String message;
+  const InvalidCredentialsFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
