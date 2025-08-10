@@ -12,7 +12,7 @@ abstract class AuthLocalDataSource {
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final SecuredStorage securedStorage;
 
-  AuthLocalDataSourceImpl({required this.securedStorage});
+  AuthLocalDataSourceImpl({required this.securedStorage, required Object sharedPreferences});
 
   @override
   Future<void> cacheTokens(AuthTokensModel tokens) async {
