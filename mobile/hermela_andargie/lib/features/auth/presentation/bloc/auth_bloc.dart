@@ -1,30 +1,14 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import '../../../../core/errors/failures.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../domain/usecases/check_authstatus_usecase.dart';
-import '../../domain/usecases/get_current_user_usecase.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
-import '../../domain/usecases/sign_up_usecase.dart';
+import '../../facad/auth_facade.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final LoginUseCase loginUseCase;
-  final SignUpUseCase signUpUseCase;
-  final LogoutUseCase logoutUseCase;
-  final CheckAuthStatusUseCase checkAuthStatusUseCase;
-  final GetCurrentUserUseCase getCurrentUserUseCase;
+  final AuthFacade authFacade;
 
-  AuthBloc({
-    required this.loginUseCase,
-    required this.signUpUseCase,
-    required this.logoutUseCase,
-    required this.checkAuthStatusUseCase,
-    required this.getCurrentUserUseCase,
-  }) : super(AuthInitial()) {
+  AuthBloc({required this.authFacade}) : super(AuthInitial()) {
     on<AuthStarted>(_onAuthStarted);
     on<AuthLoggedIn>(_onAuthLoggedIn);
     on<AuthSignedUp>(_onAuthSignedUp);
@@ -37,21 +21,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final authStatusEither = await checkAuthStatusUseCase(NoParams());
 
-    authStatusEither.fold((failure) => emit(AuthUnauthenticated()), (
-      isLoggedIn,
-    ) async {
-      if (isLoggedIn) {
-        final userEither = await getCurrentUserUseCase(NoParams());
-        userEither.fold(
-          (_) => emit(AuthUnauthenticated()),
-          (user) => emit(AuthAuthenticated(user)),
-        );
-      } else {
-        emit(AuthUnauthenticated());
-      }
-    });
+    final loggedIn = await authFacade.isLoggedIn();
+    if (loggedIn) {
+      final userOpt = await authFacade.getCurrentUser();
+      userOpt.fold(
+        () => emit(AuthUnauthenticated()),
+        (user) => emit(AuthAuthenticated(user)),
+      );
+    } else {
+      emit(AuthUnauthenticated());
+    }
   }
 
   Future<void> _onAuthLoggedIn(
@@ -60,16 +40,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
 
-    final loginEither = await loginUseCase(
-      LoginParams(email: event.email, password: event.password),
-    );
+    final result = await authFacade.login(event.email, event.password);
+    await result.fold(
+      (failure) async => emit(AuthFailure(_mapFailureToMessage(failure))),
+      (authTokens) async {
+        // Optionally store/use authTokens here if needed
 
-    loginEither.fold(
-      (failure) => emit(AuthFailure(_mapFailureToMessage(failure))),
-      (tokens) async {
-        final userEither = await getCurrentUserUseCase(NoParams());
-        userEither.fold(
-          (failure) => emit(AuthFailure(_mapFailureToMessage(failure))),
+        final userOpt = await authFacade.getCurrentUser();
+        userOpt.fold(
+          () => emit(const AuthFailure('Could not fetch user')),
           (user) => emit(AuthAuthenticated(user)),
         );
       },
@@ -82,15 +61,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
 
-    final signUpEither = await signUpUseCase(
-      SignUpParams(
-        name: event.name,
-        email: event.email,
-        password: event.password,
-      ),
+    final result = await authFacade.signUp(
+      event.name,
+      event.email,
+      event.password,
     );
 
-    signUpEither.fold(
+    result.fold(
       (failure) => emit(AuthFailure(_mapFailureToMessage(failure))),
       (user) => emit(AuthSignedUpSuccess(user)),
     );
@@ -101,13 +78,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-
-    final logoutEither = await logoutUseCase(NoParams());
-
-    logoutEither.fold(
-      (_) => emit(AuthUnauthenticated()),
-      (_) => emit(AuthUnauthenticated()),
-    );
+    await authFacade.logout();
+    emit(AuthUnauthenticated());
   }
 
   Future<void> _onAuthUserRequested(
@@ -116,21 +88,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
 
-    final userEither = await getCurrentUserUseCase(NoParams());
-
-    userEither.fold(
-      (failure) => emit(AuthFailure(_mapFailureToMessage(failure))),
+    final userOpt = await authFacade.getCurrentUser();
+    userOpt.fold(
+      () => emit(const AuthFailure('Could not fetch user')),
       (user) => emit(AuthAuthenticated(user)),
     );
   }
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
-      case const (CacheFailure):
+      case CacheFailure _:
         return 'Cache error occurred';
-      case const (ServerFailure):
+      case ServerFailure _:
         return 'Server error occurred';
-      case const (InvalidCredentialsFailure):
+      case InvalidCredentialsFailure _:
         return 'Invalid email or password';
       default:
         return 'Unexpected error occurred';
