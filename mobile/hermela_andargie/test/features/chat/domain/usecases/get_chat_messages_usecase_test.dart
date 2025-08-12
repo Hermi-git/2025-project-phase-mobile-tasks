@@ -50,13 +50,11 @@ void main() {
     chat: tChat,
     content: 'Hello',
     type: 'text',
-    chatId: tChatId,
   ),
    Message(
     id: 'm2',
     sender: tReceiver,
     chat: tChat,
-    chatId: tChatId,
     content: 'Hi there',
     type: 'text',
   ),

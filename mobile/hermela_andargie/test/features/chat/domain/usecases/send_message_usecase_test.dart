@@ -48,7 +48,7 @@ void main() {
     chat: tChat,
     content: tContent,
     type: tType,
-    chatId: tChatId,
+    
   );
 
   test('should send message through repository', () async {
