@@ -114,4 +114,20 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+
+  @override
+  Future<AuthTokens?> getTokens() async {
+    try {
+      final tokensModel = await localDataSource.getTokens();
+      if (tokensModel == null) return null;
+      return AuthTokens(
+        accessToken: tokensModel.accessToken,
+        refreshToken: tokensModel.refreshToken,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+
 }

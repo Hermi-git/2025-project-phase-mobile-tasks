@@ -21,4 +21,6 @@ abstract class AuthRepository {
   Future<Either<Failure, User>> getCurrentUser();
 
   Future<bool> hasToken();
+  Future<AuthTokens?> getTokens();
+
 }
