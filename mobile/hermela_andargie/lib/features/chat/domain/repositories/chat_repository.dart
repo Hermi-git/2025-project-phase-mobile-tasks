@@ -13,4 +13,6 @@ abstract class ChatRepository {
   });
   Future<Either<Failure, Chat>> initiateChat(String userId);
   Future<Either<Failure, void>> deleteChat(String chatId);
+  Stream<Message> get receivedMessages; 
+  Stream<Message> get deliveredMessages;
 }

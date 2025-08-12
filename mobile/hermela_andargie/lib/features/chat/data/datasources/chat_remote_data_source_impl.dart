@@ -5,26 +5,47 @@ import 'package:http/http.dart' as http;
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/constants/endpoints.dart';
 import '../../../../core/errors/exception.dart';
+import '../../../auth/domain/repositories/auth_repository.dart'; 
 import '../models/chat_model.dart';
 import '../models/message_model.dart';
 import 'chat_remote_data_source.dart';
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   final http.Client client;
-  final String token;
+  final AuthRepository authRepository;
 
-  ChatRemoteDataSourceImpl({required this.client, required this.token});
+  ChatRemoteDataSourceImpl({
+    required this.client,
+    required this.authRepository,
+  });
 
-  Map<String, String> get _headers => {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $token',
-  };
+  Future<Map<String, String>> get _headers async {
+    // get token dynamically
+    final hasToken = await authRepository.hasToken();
+    if (!hasToken) {
+      throw UnauthenticatedException();
+    }
+
+    
+    final tokensResult = await authRepository.getCurrentUser();
+
+    final tokens = await authRepository.getTokens(); 
+    if (tokens == null) {
+      throw UnauthenticatedException();
+    }
+
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${tokens.accessToken}',
+    };
+  }
 
   @override
   Future<List<ChatModel>> getMyChats() async {
+    final headers = await _headers;
     final response = await client.get(
       Uri.parse('${ApiConstants.baseUrl}${Endpoints.getMyChats}'),
-      headers: _headers,
+      headers: headers,
     );
 
     if (response.statusCode == 200) {
@@ -40,9 +61,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<List<MessageModel>> getChatMessages(String chatId) async {
+    final headers = await _headers;
     final response = await client.get(
       Uri.parse('${ApiConstants.baseUrl}${Endpoints.getChatMessages(chatId)}'),
-      headers: _headers,
+      headers: headers,
     );
 
     if (response.statusCode == 200) {
@@ -62,9 +84,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String content,
     required String type,
   }) async {
+    final headers = await _headers;
     final response = await client.post(
       Uri.parse('${ApiConstants.baseUrl}${Endpoints.getChatMessages(chatId)}'),
-      headers: _headers,
+      headers: headers,
       body: jsonEncode({'content': content, 'type': type}),
     );
 
@@ -79,9 +102,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<ChatModel> initiateChat(String userId) async {
+    final headers = await _headers;
     final response = await client.post(
       Uri.parse('${ApiConstants.baseUrl}${Endpoints.initiateChat}'),
-      headers: _headers,
+      headers: headers,
       body: jsonEncode({'userId': userId}),
     );
 
@@ -96,9 +120,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<void> deleteChat(String chatId) async {
+    final headers = await _headers;
     final response = await client.delete(
       Uri.parse('${ApiConstants.baseUrl}${Endpoints.deleteChat(chatId)}'),
-      headers: _headers,
+      headers: headers,
     );
 
     if (response.statusCode == 200 || response.statusCode == 204) {
