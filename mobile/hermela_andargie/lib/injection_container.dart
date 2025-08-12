@@ -19,6 +19,22 @@ import 'features/auth/domain/usecases/sign_up_usecase.dart';
 import 'features/auth/facad/auth_facade.dart';
 import 'features/auth/facad/auth_facade_impl.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/chat/data/datasources/chat_local_data_source.dart';
+import 'features/chat/data/datasources/chat_local_data_source_impl.dart';
+import 'features/chat/data/datasources/chat_remote_data_source.dart';
+import 'features/chat/data/datasources/chat_remote_data_source_impl.dart';
+import 'features/chat/data/datasources/chat_socket_data_source.dart';
+import 'features/chat/data/repositories/chat_repository_impl.dart';
+import 'features/chat/domain/entities/chat.dart';
+import 'features/chat/domain/entities/chat_user.dart';
+import 'features/chat/domain/repositories/chat_repository.dart';
+import 'features/chat/domain/usecases/delete_chat.dart';
+import 'features/chat/domain/usecases/get_chat_messages.dart';
+import 'features/chat/domain/usecases/get_my_chats.dart';
+import 'features/chat/domain/usecases/initiate_chat.dart';
+import 'features/chat/domain/usecases/send_message.dart';
+import 'features/chat/presentation/bloc/chatDetail/chat_detail_bloc.dart';
+import 'features/chat/presentation/bloc/chatList/chat_list_bloc.dart';
 import 'features/products/data/datasources/product_local_data_source.dart';
 import 'features/products/data/datasources/product_local_data_source_impl.dart';
 import 'features/products/data/datasources/product_remote_data_source.dart';
@@ -33,6 +49,18 @@ import 'features/products/domain/usecases/update_product.dart';
 import 'features/products/presentation/bloc/product_bloc.dart';
 
 final sl = GetIt.instance;
+
+class ChatDetailBlocParams {
+  final String chatId;
+  final ChatUser currentUser;
+  final Chat currentChat;
+
+  ChatDetailBlocParams({
+    required this.chatId,
+    required this.currentUser,
+    required this.currentChat,
+  });
+}
 
 Future<void> init() async {
   //! External dependencies first
@@ -102,6 +130,53 @@ Future<void> init() async {
 
   // Bloc
   sl.registerFactory(() => AuthBloc(authFacade: sl<AuthFacade>()));
+
+   // Chat Feature registrations
+
+  // Data Sources
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(
+      client: sl<http.Client>(),
+      authRepository: sl(), 
+    ),
+  );
+
+  sl.registerLazySingleton<ChatLocalDataSource>(
+    () => ChatLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+
+  sl.registerLazySingleton<ChatSocketDataSource>(
+    () => ChatSocketDataSourceImpl(authRepository: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      socketDataSource: sl(),
+    ),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => GetMyChatsUseCase(sl()));
+  sl.registerLazySingleton(() => GetChatMessagesUseCase(sl()));
+  sl.registerLazySingleton(() => SendMessageUseCase(sl()));
+  sl.registerLazySingleton(() => InitiateChatUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteChatUseCase(sl()));
+
+ // For ChatListBloc: simple factory since only chatRepository is needed
+sl.registerFactory<ChatListBloc>(() => ChatListBloc(chatRepository: sl()));
+
+sl.registerFactoryParam<ChatDetailBloc, ChatDetailBlocParams, void>(
+  (params, _) => ChatDetailBloc(
+    chatRepository: sl(),
+    chatId: params.chatId,
+    currentUser: params.currentUser,
+    currentChat: params.currentChat,
+  ),
+);
+
 
   //! Features - Product
   // Data Sources
