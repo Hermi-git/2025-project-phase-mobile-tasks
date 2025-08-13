@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../domain/entities/product.dart';
 import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
 import '../bloc/product_state.dart';
-import '../widgets/product_card.dart';
 import '../widgets/app_button.dart';
+import '../widgets/product_card.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -114,10 +116,16 @@ class _SearchPageState extends State<SearchPage> {
                       children:
                           filteredProducts.map((p) {
                             return ProductCard(
-                              imageUrl: p.imageUrl,
-                              name: p.name,
-                              category: p.description,
-                              price: p.price,
+                              product: Product(
+                                id: p.id,
+                                name: p.name,
+                                description: p.description,
+                                price: p.price,
+                                imageUrl: p.imageUrl,
+                              ),
+                              onTap: () {
+                                // Optionally navigate to product details
+                              },
                             );
                           }).toList(),
                     );
@@ -132,7 +140,9 @@ class _SearchPageState extends State<SearchPage> {
 
               /// Filter Form
               TextField(
-                onChanged: (value) => setState(() => _category = value),
+                onChanged: (value) {
+                  setState(() => _category = value);
+                },
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   filled: true,
@@ -144,17 +154,21 @@ class _SearchPageState extends State<SearchPage> {
               const Text('Price'),
               Slider(
                 value: _priceValue,
-                onChanged: (value) => setState(() => _priceValue = value),
+                onChanged: (value) {
+                  setState(() => _priceValue = value);
+                },
                 min: 0,
                 max: 200,
                 activeColor: Colors.deepPurple,
                 inactiveColor: Colors.grey.shade300,
               ),
               const SizedBox(height: 16),
+
+              /// Apply Button
               AppButton(
                 label: 'APPLY',
                 onPressed: () {
-                  // filtering is handled above via setState
+                  // Filtering happens above via setState
                 },
               ),
             ],
